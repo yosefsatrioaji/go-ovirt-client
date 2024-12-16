@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	ovirtclient "github.com/ovirt/go-ovirt-client/v3"
+	ovirtclient "github.com/renaldyr/go-ovirt-client/v3"
 )
 
 func TestVMListShouldNotFail(t *testing.T) {

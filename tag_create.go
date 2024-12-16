@@ -1,7 +1,7 @@
 package ovirtclient
 
 import (
-	ovirtsdk "github.com/ovirt/go-ovirt"
+	ovirtsdk "github.com/renaldyr/go-ovirt"
 )
 
 func (o *oVirtClient) CreateTag(name string, params CreateTagParams, retries ...RetryStrategy) (result Tag, err error) {

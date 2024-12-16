@@ -1,7 +1,7 @@
 package ovirtclient
 
 import (
-	ovirtsdk "github.com/ovirt/go-ovirt"
+	ovirtsdk "github.com/renaldyr/go-ovirt"
 )
 
 //go:generate go run scripts/rest/rest.go -i "Template" -n "template" -T "TemplateID"

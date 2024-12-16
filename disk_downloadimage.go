@@ -10,7 +10,7 @@ import (
 	"sync"
 	"time"
 
-	ovirtsdk4 "github.com/ovirt/go-ovirt"
+	ovirtsdk4 "github.com/renaldyr/go-ovirt"
 )
 
 // Deprecated: use StartDownloadDisk instead.

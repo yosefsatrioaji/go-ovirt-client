@@ -8,7 +8,7 @@ import (
 	"sync"
 	"time"
 
-	ovirtsdk4 "github.com/ovirt/go-ovirt"
+	ovirtsdk4 "github.com/renaldyr/go-ovirt"
 )
 
 // ExtraSettings are the optional settings for the oVirt connection.

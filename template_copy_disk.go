@@ -5,7 +5,7 @@ import (
 	"sync"
 	"time"
 
-	ovirtsdk "github.com/ovirt/go-ovirt"
+	ovirtsdk "github.com/renaldyr/go-ovirt"
 )
 
 func (o *oVirtClient) CopyTemplateDiskToStorageDomain(
