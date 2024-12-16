@@ -4,7 +4,7 @@ Release:	0.0.master%{?release_suffix}%{?dist}
 License:	ASL 2.0
 Summary:	go ovirt client with current patch
 Group:		Virtualization/Management
-URL:		https://github.com/oVirt/go-ovirt-client
+URL:		https://github.com/renaldyr/go-ovirt-client
 BuildArch:	x86_64
 Source:         go-ovirt-client-tests.tar.gz
 

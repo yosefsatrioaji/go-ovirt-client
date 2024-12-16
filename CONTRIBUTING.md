@@ -4,7 +4,7 @@ Thank you for wanting to contribute to go-ovirt-client! This document will descr
 
 ## Concept
 
-This library is built to wrap [go-ovirt](https://github.com/ovirt/go-ovirt), which is an automatically generated library for oVirt. This library is mostly hand-written and aims to provide an easier to use interface and several convenience functions, as well as a proper abstraction to enable mocking for tests. Having mocks eliminates the need for an actual running oVirt engine to run tests.
+This library is built to wrap [go-ovirt](https://github.com/renaldyr/go-ovirt), which is an automatically generated library for oVirt. This library is mostly hand-written and aims to provide an easier to use interface and several convenience functions, as well as a proper abstraction to enable mocking for tests. Having mocks eliminates the need for an actual running oVirt engine to run tests.
 
 ## Tooling
 
@@ -112,14 +112,14 @@ This library follows the Go module specification. Once v1 is released, any backw
 This library is versioned according to SemVer, as required by the Go module specification. That means, that your change will be in the next release once your PR is merged. Until then, you can grab the latest version for testing like this:
 
 ```
-go get github.com/ovirt/go-ovirt-client@main
+go get github.com/renaldyr/go-ovirt-client@main
 ```
 
 This will create a `go.mod` entry like this:
 
 ```
 require(
-  github.com/ovirt/go-ovirt-client v0.6.1-0.20210913092754-237ed78d23e7
+  github.com/renaldyr/go-ovirt-client v0.6.1-0.20210913092754-237ed78d23e7
 )
 ```
 

@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 
-	ovirtsdk4 "github.com/ovirt/go-ovirt"
+	ovirtsdk4 "github.com/renaldyr/go-ovirt"
 )
 
 func (o *oVirtClient) AddVMToAffinityGroup(

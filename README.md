@@ -1,13 +1,13 @@
 # go-ovirt-client: an easy-to-use overlay for the oVirt Go SDK
 
-This library provides an easy-to-use overlay for the automatically generated [Go SDK for oVirt](https://github.com/ovirt/go-ovirt). It does *not* replace the Go SDK. It implements the functions of the SDK only partially and is primarily used by the [oVirt Terraform provider](https://github.com/ovirt/terraform-provider-ovirt/).
+This library provides an easy-to-use overlay for the automatically generated [Go SDK for oVirt](https://github.com/renaldyr/go-ovirt). It does *not* replace the Go SDK. It implements the functions of the SDK only partially and is primarily used by the [oVirt Terraform provider](https://github.com/renaldyr/terraform-provider-ovirt/).
 
 ## Using this library
 
 To use this library you will have to include it as a Go module dependency:
 
 ```
-go get github.com/ovirt/go-ovirt-client github.com/ovirt/go-ovirt-client-log/v3
+go get github.com/renaldyr/go-ovirt-client github.com/ovirt/go-ovirt-client-log/v3
 ```
 
 You can then create a client instance like this:
@@ -18,7 +18,7 @@ package main
 import (
 	"crypto/x509"
 
-	ovirtclient "github.com/ovirt/go-ovirt-client/v3"
+	ovirtclient "github.com/renaldyr/go-ovirt-client/v3"
 	ovirtclientlog "github.com/ovirt/go-ovirt-client-log/v3"
 )
 
@@ -122,7 +122,7 @@ import (
 	"os"
 	"testing"
 
-	ovirtclient "github.com/ovirt/go-ovirt-client/v3"
+	ovirtclient "github.com/renaldyr/go-ovirt-client/v3"
 	ovirtclientlog "github.com/ovirt/go-ovirt-client-log/v3"
 )
 
@@ -161,7 +161,7 @@ func TestSomething(t *testing.T) {
 }
 ```
 
-**Tip:** You can use any logger that satisfies the `Logger` interface described in [go-ovirt-client-log](https://github.com/oVirt/go-ovirt-client-log)
+**Tip:** You can use any logger that satisfies the `Logger` interface described in [go-ovirt-client-log](https://github.com/renaldyr/go-ovirt-client-log)
 
 ## Retries
 

@@ -3,7 +3,7 @@ package ovirtclient_test
 import (
 	"testing"
 
-	ovirtclient "github.com/ovirt/go-ovirt-client/v3"
+	ovirtclient "github.com/renaldyr/go-ovirt-client/v3"
 )
 
 func TestExtendDisk(t *testing.T) {

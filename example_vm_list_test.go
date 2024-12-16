@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	ovirtclientlog "github.com/ovirt/go-ovirt-client-log/v3"
-	ovirtclient "github.com/ovirt/go-ovirt-client/v3"
+	ovirtclient "github.com/renaldyr/go-ovirt-client/v3"
 )
 
 // The following example demonstrates how to list virtual machines.
