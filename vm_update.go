@@ -12,7 +12,7 @@ func (o *oVirtClient) UpdateVM(
 	retries ...RetryStrategy,
 ) (result VM, err error) {
 	retries = defaultRetries(retries, defaultWriteTimeouts(o))
-	fmt.Println("params : ", params)
+	o.logger.Infof("updating VM %s", id)
 	vm := &ovirtsdk.Vm{}
 	vm.SetId(string(id))
 	if name := params.Name(); name != nil {
