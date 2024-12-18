@@ -12,8 +12,9 @@ func (o *oVirtClient) UpdateVM(
 	retries ...RetryStrategy,
 ) (result VM, err error) {
 	retries = defaultRetries(retries, defaultWriteTimeouts(o))
-	o.logger.Infof("updating VM %s", id)
+	o.logger.Infof("updating VM params %s", params)
 	vm := &ovirtsdk.Vm{}
+	vm_cores := &ovirtsdk.CpuTopology{}
 	vm.SetId(string(id))
 	if name := params.Name(); name != nil {
 		if *name == "" {
@@ -27,6 +28,10 @@ func (o *oVirtClient) UpdateVM(
 	if description := params.Description(); description != nil {
 		vm.SetDescription(*description)
 	}
+	vm_cores.SetCores(int64(2))
+	vm_cores.SetThreads(int64(1))
+	vm_cores.SetSockets(int64(1))
+	vm.MustCpu().SetTopology(vm_cores)
 
 	err = retry(
 		fmt.Sprintf("updating vm %s", id),
