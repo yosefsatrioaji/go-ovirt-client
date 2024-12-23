@@ -15,6 +15,7 @@ func (o *oVirtClient) UpdateVM(
 	o.logger.Infof("updating VM params %s", params)
 	vm := &ovirtsdk.Vm{}
 	vm_cores := &ovirtsdk.CpuTopology{}
+	vm_cpu := &ovirtsdk.Cpu{}
 	vm.SetId(string(id))
 	if name := params.Name(); name != nil {
 		if *name == "" {
@@ -31,7 +32,8 @@ func (o *oVirtClient) UpdateVM(
 	vm_cores.SetCores(int64(2))
 	vm_cores.SetThreads(int64(1))
 	vm_cores.SetSockets(int64(1))
-	vm.MustCpu().SetTopology(vm_cores)
+	vm_cpu.SetTopology(vm_cores)
+	vm.SetCpu(vm_cpu)
 
 	err = retry(
 		fmt.Sprintf("updating vm %s", id),
