@@ -1516,6 +1516,8 @@ type UpdateVMParameters interface {
 	Comment() *string
 	// Description returns the description for the VM. Return nil if the name should not be changed.
 	Description() *string
+
+	CPUCores() *int
 }
 
 // VMCPUTopo contains the CPU topology information about a VM.
@@ -1605,6 +1607,8 @@ type BuildableUpdateVMParameters interface {
 
 	// MustWithDescription is identical to WithDescription, but panics instead of returning an error.
 	MustWithDescription(comment string) BuildableUpdateVMParameters
+
+	WithCPUCores(cores int) (BuildableUpdateVMParameters, error)
 }
 
 // UpdateVMParams returns a buildable set of update parameters.
@@ -1616,6 +1620,7 @@ type updateVMParams struct {
 	name        *string
 	comment     *string
 	description *string
+	cpuCores    *int
 }
 
 func (u *updateVMParams) MustWithName(name string) BuildableUpdateVMParameters {
@@ -1654,6 +1659,10 @@ func (u *updateVMParams) Description() *string {
 	return u.description
 }
 
+func (u *updateVMParams) CPUCores() *int {
+	return u.cpuCores
+}
+
 func (u *updateVMParams) WithName(name string) (BuildableUpdateVMParameters, error) {
 	if err := validateVMName(name); err != nil {
 		return nil, err
@@ -1669,6 +1678,14 @@ func (u *updateVMParams) WithComment(comment string) (BuildableUpdateVMParameter
 
 func (u *updateVMParams) WithDescription(description string) (BuildableUpdateVMParameters, error) {
 	u.description = &description
+	return u, nil
+}
+
+func (u *updateVMParams) WithCPUCores(cores int) (BuildableUpdateVMParameters, error) {
+	if cores < 1 {
+		return nil, fmt.Errorf("cores must be at least 1")
+	}
+	u.cpuCores = &cores
 	return u, nil
 }
 
