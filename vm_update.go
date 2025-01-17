@@ -44,11 +44,6 @@ func (o *oVirtClient) UpdateVM(
 			if err != nil {
 				return wrap(err, EUnidentified, "failed to update VM")
 			}
-
-			_, err = o.conn.SystemService().VmsService().VmService(string(id)).Reboot().Send()
-			if err != nil {
-				return wrap(err, EUnidentified, "failed to reboot VM")
-			}
 			vm, ok := response.Vm()
 			if !ok {
 				return newError(EFieldMissing, "missing VM in VM update response")
@@ -61,6 +56,12 @@ func (o *oVirtClient) UpdateVM(
 					"failed to convert VM",
 				)
 			}
+
+			_, err = o.conn.SystemService().VmsService().VmService(string(id)).Reboot().Send()
+			if err != nil {
+				return wrap(err, EUnidentified, "failed to reboot VM")
+			}
+
 			return nil
 		})
 	return result, err
