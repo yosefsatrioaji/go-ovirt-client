@@ -30,8 +30,8 @@ func (o *oVirtClient) UpdateVM(
 		vm.SetDescription(*description)
 	}
 	vm_cores.SetCores(int64(*params.CpuCores()))
-	vm_cores.SetThreads(int64(4))
-	vm_cores.SetSockets(int64(1))
+	vm_cores.SetThreads(int64(*params.CpuThreads()))
+	vm_cores.SetSockets(int64(*params.CpuSockets()))
 	vm_cpu.SetTopology(vm_cores)
 	vm.SetCpu(vm_cpu)
 

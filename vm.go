@@ -1518,6 +1518,10 @@ type UpdateVMParameters interface {
 	Description() *string
 
 	CpuCores() *int
+
+	CpuThreads() *int
+
+	CpuSockets() *int
 }
 
 // VMCPUTopo contains the CPU topology information about a VM.
@@ -1611,6 +1615,14 @@ type BuildableUpdateVMParameters interface {
 	WithCpuCores(cpuCores int) (BuildableUpdateVMParameters, error)
 
 	MustWithCpuCores(cpuCores int) BuildableUpdateVMParameters
+
+	WithCpuThreads(cpuThreads int) (BuildableUpdateVMParameters, error)
+
+	MustWithCpuThreads(cpuThreads int) BuildableUpdateVMParameters
+
+	WithCpuSockets(cpuSockets int) (BuildableUpdateVMParameters, error)
+
+	MustWithCpuSockets(cpuSockets int) BuildableUpdateVMParameters
 }
 
 // UpdateVMParams returns a buildable set of update parameters.
@@ -1623,6 +1635,8 @@ type updateVMParams struct {
 	comment     *string
 	description *string
 	cpuCores    *int
+	cpuThreads  *int
+	cpuSockets  *int
 }
 
 func (u *updateVMParams) MustWithName(name string) BuildableUpdateVMParameters {
@@ -1657,6 +1671,22 @@ func (u *updateVMParams) MustWithCpuCores(cpuCores int) BuildableUpdateVMParamet
 	return builder
 }
 
+func (u *updateVMParams) MustWithCpuThreads(cpuThreads int) BuildableUpdateVMParameters {
+	builder, err := u.WithCpuThreads(cpuThreads)
+	if err != nil {
+		panic(err)
+	}
+	return builder
+}
+
+func (u *updateVMParams) MustWithCpuSockets(cpuSockets int) BuildableUpdateVMParameters {
+	builder, err := u.WithCpuSockets(cpuSockets)
+	if err != nil {
+		panic(err)
+	}
+	return builder
+}
+
 func (u *updateVMParams) Name() *string {
 	return u.name
 }
@@ -1671,6 +1701,14 @@ func (u *updateVMParams) Description() *string {
 
 func (u *updateVMParams) CpuCores() *int {
 	return u.cpuCores
+}
+
+func (u *updateVMParams) CpuThreads() *int {
+	return u.cpuThreads
+}
+
+func (u *updateVMParams) CpuSockets() *int {
+	return u.cpuSockets
 }
 
 func (u *updateVMParams) WithName(name string) (BuildableUpdateVMParameters, error) {
@@ -1693,6 +1731,16 @@ func (u *updateVMParams) WithDescription(description string) (BuildableUpdateVMP
 
 func (u *updateVMParams) WithCpuCores(cpuCores int) (BuildableUpdateVMParameters, error) {
 	u.cpuCores = &cpuCores
+	return u, nil
+}
+
+func (u *updateVMParams) WithCpuThreads(cpuThreads int) (BuildableUpdateVMParameters, error) {
+	u.cpuThreads = &cpuThreads
+	return u, nil
+}
+
+func (u *updateVMParams) WithCpuSockets(cpuSockets int) (BuildableUpdateVMParameters, error) {
+	u.cpuSockets = &cpuSockets
 	return u, nil
 }
 
