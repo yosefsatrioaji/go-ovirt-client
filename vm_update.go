@@ -29,6 +29,9 @@ func (o *oVirtClient) UpdateVM(
 	if description := params.Description(); description != nil {
 		vm.SetDescription(*description)
 	}
+	if memory := params.Memory(); memory != nil {
+		vm.SetMemory(int64(*memory))
+	}
 	vm_cores.SetCores(int64(*params.CpuCores()))
 	vm_cores.SetThreads(int64(*params.CpuThreads()))
 	vm_cores.SetSockets(int64(*params.CpuSockets()))

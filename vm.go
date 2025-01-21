@@ -1522,6 +1522,8 @@ type UpdateVMParameters interface {
 	CpuThreads() *int
 
 	CpuSockets() *int
+
+	Memory() *int64
 }
 
 // VMCPUTopo contains the CPU topology information about a VM.
@@ -1623,6 +1625,10 @@ type BuildableUpdateVMParameters interface {
 	WithCpuSockets(cpuSockets int) (BuildableUpdateVMParameters, error)
 
 	MustWithCpuSockets(cpuSockets int) BuildableUpdateVMParameters
+
+	WithMemory(memory int64) (BuildableUpdateVMParameters, error)
+
+	MustWithMemory(memory int64) BuildableUpdateVMParameters
 }
 
 // UpdateVMParams returns a buildable set of update parameters.
@@ -1637,6 +1643,7 @@ type updateVMParams struct {
 	cpuCores    *int
 	cpuThreads  *int
 	cpuSockets  *int
+	memory      *int64
 }
 
 func (u *updateVMParams) MustWithName(name string) BuildableUpdateVMParameters {
@@ -1687,6 +1694,14 @@ func (u *updateVMParams) MustWithCpuSockets(cpuSockets int) BuildableUpdateVMPar
 	return builder
 }
 
+func (u *updateVMParams) MustWithMemory(memory int64) BuildableUpdateVMParameters {
+	builder, err := u.WithMemory(memory)
+	if err != nil {
+		panic(err)
+	}
+	return builder
+}
+
 func (u *updateVMParams) Name() *string {
 	return u.name
 }
@@ -1709,6 +1724,10 @@ func (u *updateVMParams) CpuThreads() *int {
 
 func (u *updateVMParams) CpuSockets() *int {
 	return u.cpuSockets
+}
+
+func (u *updateVMParams) Memory() *int64 {
+	return u.memory
 }
 
 func (u *updateVMParams) WithName(name string) (BuildableUpdateVMParameters, error) {
@@ -1741,6 +1760,11 @@ func (u *updateVMParams) WithCpuThreads(cpuThreads int) (BuildableUpdateVMParame
 
 func (u *updateVMParams) WithCpuSockets(cpuSockets int) (BuildableUpdateVMParameters, error) {
 	u.cpuSockets = &cpuSockets
+	return u, nil
+}
+
+func (u *updateVMParams) WithMemory(memory int64) (BuildableUpdateVMParameters, error) {
+	u.memory = &memory
 	return u, nil
 }
 
