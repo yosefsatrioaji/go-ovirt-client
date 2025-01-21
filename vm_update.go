@@ -60,11 +60,6 @@ func (o *oVirtClient) UpdateVM(
 				)
 			}
 
-			_, err = o.conn.SystemService().VmsService().VmService(string(id)).Reboot().Send()
-			if err != nil {
-				return wrap(err, EUnidentified, "failed to reboot VM")
-			}
-
 			return nil
 		})
 	return result, err
