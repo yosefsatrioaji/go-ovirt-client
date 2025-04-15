@@ -3,7 +3,7 @@ package ovirtclient
 import (
 	"fmt"
 
-	ovirtsdk "github.com/renaldyr/go-ovirt"
+	ovirtsdk "github.com/ovirt/go-ovirt"
 )
 
 func (o *oVirtClient) AddTagToVM(id VMID, tagID TagID, retries ...RetryStrategy) (err error) {

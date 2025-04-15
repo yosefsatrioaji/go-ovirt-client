@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	ovirtsdk "github.com/renaldyr/go-ovirt"
+	ovirtsdk "github.com/ovirt/go-ovirt"
 )
 
 type vmBuilderComponent func(params OptionalVMParameters, builder *ovirtsdk.VmBuilder)

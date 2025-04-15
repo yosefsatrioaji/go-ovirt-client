@@ -1,6 +1,6 @@
 package ovirtclient
 
-import ovirtsdk "github.com/renaldyr/go-ovirt"
+import ovirtsdk "github.com/ovirt/go-ovirt"
 
 // InstanceTypeID is a type alias for instance type IDs.
 type InstanceTypeID string

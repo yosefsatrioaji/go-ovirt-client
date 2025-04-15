@@ -5,7 +5,7 @@ import (
 	"sync"
 	"time"
 
-	ovirtsdk "github.com/renaldyr/go-ovirt"
+	ovirtsdk "github.com/ovirt/go-ovirt"
 )
 
 func (o *oVirtClient) UpdateDisk(id DiskID, params UpdateDiskParameters, retries ...RetryStrategy) (

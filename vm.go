@@ -8,7 +8,7 @@ import (
 	"strings"
 	"sync"
 
-	ovirtsdk "github.com/renaldyr/go-ovirt"
+	ovirtsdk "github.com/ovirt/go-ovirt"
 )
 
 // VMID is a specific type for virtual machine IDs.

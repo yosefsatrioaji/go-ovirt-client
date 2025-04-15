@@ -1,7 +1,7 @@
 package ovirtclient
 
 import (
-	ovirtsdk "github.com/renaldyr/go-ovirt"
+	ovirtsdk "github.com/ovirt/go-ovirt"
 )
 
 // AffinityGroupClient describes the methods required for working with affinity groups.

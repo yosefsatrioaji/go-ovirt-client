@@ -11,7 +11,7 @@ import (
 	"net/http"
 	"sync"
 
-	ovirtsdk4 "github.com/renaldyr/go-ovirt"
+	ovirtsdk4 "github.com/ovirt/go-ovirt"
 )
 
 // Deprecated: use UploadToNewDisk instead.

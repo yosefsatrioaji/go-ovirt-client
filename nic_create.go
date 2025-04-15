@@ -5,7 +5,7 @@ import (
 	"net"
 
 	"github.com/google/uuid"
-	ovirtsdk "github.com/renaldyr/go-ovirt"
+	ovirtsdk "github.com/ovirt/go-ovirt"
 )
 
 func (o *oVirtClient) CreateNIC(

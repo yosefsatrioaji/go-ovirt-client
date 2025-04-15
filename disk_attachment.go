@@ -3,7 +3,7 @@ package ovirtclient
 import (
 	"strings"
 
-	ovirtsdk4 "github.com/renaldyr/go-ovirt"
+	ovirtsdk4 "github.com/ovirt/go-ovirt"
 )
 
 // DiskAttachmentID is the identifier for the disk attachment.
@@ -166,6 +166,8 @@ type DiskAttachment interface {
 	Bootable() bool
 	// Active defines whether the disk is active in the virtual machine it’s attached to.
 	Active() bool
+	// LogicalName describes the logical name of the virtual machine’s disk, as seen from inside the virtual machine.
+	LogicalName() LogicalName
 
 	// VM fetches the virtual machine this attachment belongs to.
 	VM(retries ...RetryStrategy) (VM, error)
@@ -185,6 +187,7 @@ type diskAttachment struct {
 	diskInterface DiskInterface
 	active        bool
 	bootable      bool
+	logicalName   LogicalName
 }
 
 func (d *diskAttachment) DiskInterface() DiskInterface {
@@ -213,6 +216,10 @@ func (d *diskAttachment) Bootable() bool {
 
 func (d *diskAttachment) Active() bool {
 	return d.active
+}
+
+func (d *diskAttachment) LogicalName() LogicalName {
+	return d.logicalName
 }
 
 func (d *diskAttachment) VM(retries ...RetryStrategy) (VM, error) {
@@ -256,6 +263,10 @@ func convertSDKDiskAttachment(object *ovirtsdk4.DiskAttachment, o *oVirtClient) 
 	if !ok {
 		return nil, newFieldNotFound("active on disk attachment", "active")
 	}
+	logicalName, ok := object.LogicalName()
+	if !ok {
+		return nil, newFieldNotFound("Logical name of the disk attachment", "logical name")
+	}
 	return &diskAttachment{
 		client: o,
 
@@ -265,5 +276,9 @@ func convertSDKDiskAttachment(object *ovirtsdk4.DiskAttachment, o *oVirtClient) 
 		diskInterface: DiskInterface(diskInterface),
 		bootable:      bootable,
 		active:        active,
+		logicalName:   LogicalName(logicalName),
 	}, nil
 }
+
+// LogicalName is the logical name of the virtual machine’s disk, as seen from inside the virtual machine.
+type LogicalName string

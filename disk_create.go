@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"sync"
 
-	ovirtsdk4 "github.com/renaldyr/go-ovirt"
+	ovirtsdk4 "github.com/ovirt/go-ovirt"
 )
 
 func (o *oVirtClient) StartCreateDisk(
