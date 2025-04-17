@@ -265,7 +265,8 @@ func convertSDKDiskAttachment(object *ovirtsdk4.DiskAttachment, o *oVirtClient) 
 	}
 	logicalName, ok := object.LogicalName()
 	if !ok {
-		return nil, newFieldNotFound("Logical name of the disk attachment", "logical name")
+		//return nil, newFieldNotFound("Logical name of the disk attachment", "logical name")
+		logicalName = "Not provisioned by the OS yet."
 	}
 	return &diskAttachment{
 		client: o,
