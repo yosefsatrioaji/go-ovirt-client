@@ -505,6 +505,38 @@ func (r reconnectStrategy) OnWaitExpired(_ error, _ string) error {
 	return nil
 }
 
+func FixedDelayStrategy(delay time.Duration) RetryStrategy {
+	return &retryStrategyContainer{
+		func() RetryInstance {
+			return &fixedDelayStrategy{delay: delay}
+		},
+		false,
+		true, // it can wait
+		false,
+		false,
+	}
+}
+
+type fixedDelayStrategy struct {
+	delay time.Duration
+}
+
+func (f *fixedDelayStrategy) Recover(err error) error {
+	return err
+}
+
+func (f *fixedDelayStrategy) Continue(err error, action string) error {
+	return nil
+}
+
+func (f *fixedDelayStrategy) Wait(_ error) interface{} {
+	return time.After(f.delay)
+}
+
+func (f *fixedDelayStrategy) OnWaitExpired(_ error, _ string) error {
+	return nil
+}
+
 func defaultRetries(retries []RetryStrategy, timeout []RetryStrategy) []RetryStrategy {
 	foundWait := false
 	foundTimeout := false
@@ -582,6 +614,23 @@ func defaultLongTimeouts(client Client) []RetryStrategy {
 		MaxTries(30),
 		CallTimeout(15 * time.Minute),
 		Timeout(30 * time.Minute),
+		ReconnectStrategy(client),
+	}
+}
+
+func defaultTimeoutsFixedDelay(client Client) []RetryStrategy {
+	if ctx := client.GetContext(); ctx != nil {
+		return []RetryStrategy{
+			MaxTries(10),
+			ContextStrategy(ctx),
+			ReconnectStrategy(client),
+		}
+	}
+	return []RetryStrategy{
+		MaxTries(30),
+		FixedDelayStrategy(3 * time.Minute),
+		CallTimeout(5 * time.Minute),
+		Timeout(60 * time.Minute),
 		ReconnectStrategy(client),
 	}
 }
