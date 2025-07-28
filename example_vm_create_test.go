@@ -3,8 +3,8 @@ package ovirtclient_test
 import (
 	"fmt"
 
-	ovirtclient "github.com/marifwicaksana/go-ovirt-client/v3"
 	ovirtclientlog "github.com/ovirt/go-ovirt-client-log/v3"
+	ovirtclient "github.com/yosefsatrioaji/go-ovirt-client/v3"
 )
 
 // The following example demonstrates how to create a virtual machine. It is set up

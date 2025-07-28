@@ -18,7 +18,7 @@ package main
 import (
 	"crypto/x509"
 
-	ovirtclient "github.com/marifwicaksana/go-ovirt-client/v3"
+	ovirtclient "github.com/yosefsatrioaji/go-ovirt-client/v3"
 	ovirtclientlog "github.com/ovirt/go-ovirt-client-log/v3"
 )
 
@@ -122,7 +122,7 @@ import (
 	"os"
 	"testing"
 
-	ovirtclient "github.com/marifwicaksana/go-ovirt-client/v3"
+	ovirtclient "github.com/yosefsatrioaji/go-ovirt-client/v3"
 	ovirtclientlog "github.com/ovirt/go-ovirt-client-log/v3"
 )
 
