@@ -525,6 +525,10 @@ func (f *fixedDelayStrategy) Recover(err error) error {
 	return err
 }
 
+func (f *fixedDelayStrategy) Name() string {
+	return fmt.Sprintf("fixed delay strategy of %d seconds", f.delay/time.Second)
+}
+
 func (f *fixedDelayStrategy) Continue(err error, action string) error {
 	return nil
 }
@@ -554,6 +558,33 @@ func defaultRetries(retries []RetryStrategy, timeout []RetryStrategy) []RetryStr
 	}
 	if !foundWait {
 		retries = append(retries, ExponentialBackoff(2))
+	}
+	if !foundTimeout {
+		retries = append(retries, timeout...)
+	}
+	if !foundClassifier {
+		retries = append(retries, AutoRetry())
+	}
+	return retries
+}
+
+func defaultRetriesDelay(retries []RetryStrategy, timeout []RetryStrategy) []RetryStrategy {
+	foundWait := false
+	foundTimeout := false
+	foundClassifier := false
+	for _, r := range retries {
+		if r.CanWait() {
+			foundWait = true
+		}
+		if r.CanTimeout() {
+			foundTimeout = true
+		}
+		if r.CanClassifyErrors() {
+			foundClassifier = true
+		}
+	}
+	if !foundWait {
+		retries = append(retries, FixedDelayStrategy(3*time.Minute))
 	}
 	if !foundTimeout {
 		retries = append(retries, timeout...)
