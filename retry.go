@@ -621,8 +621,10 @@ func defaultLongTimeouts(client Client) []RetryStrategy {
 func defaultTimeoutsFixedDelay(client Client) []RetryStrategy {
 	if ctx := client.GetContext(); ctx != nil {
 		return []RetryStrategy{
-			MaxTries(10),
-			ContextStrategy(ctx),
+			MaxTries(30),
+			FixedDelayStrategy(3 * time.Minute),
+			CallTimeout(5 * time.Minute),
+			Timeout(60 * time.Minute),
 			ReconnectStrategy(client),
 		}
 	}
