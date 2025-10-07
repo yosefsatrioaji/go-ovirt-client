@@ -37,6 +37,12 @@ type OptionalVNICProfileParameters interface {
 // BuildableVNICProfileParameters is a buildable version of OptionalVNICProfileParameters.
 type BuildableVNICProfileParameters interface {
 	OptionalVNICProfileParameters
+	// WithComment sets a comment for the VNIC profile.
+	WithComment(c string) *vnicProfileParams
+	// WithDescription sets a description for the VNIC profile.
+	WithDescription(d string) *vnicProfileParams
+	WithPassThrough(p ovirtsdk.VnicPassThroughMode) *vnicProfileParams
+	WithPortMirroring(pm bool) *vnicProfileParams
 }
 
 // CreateVNICProfileParams creats a buildable set of optional parameters for VNICProfile creation.
