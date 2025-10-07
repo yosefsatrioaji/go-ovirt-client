@@ -27,6 +27,10 @@ func (o *oVirtClient) CreateVNICProfile(
 			profileBuilder := ovirtsdk.NewVnicProfileBuilder()
 			profileBuilder.Name(name)
 			profileBuilder.Network(ovirtsdk.NewNetworkBuilder().Id(string(networkID)).MustBuild())
+			profileBuilder.Description(params.Description())
+			profileBuilder.Comment(params.Comment())
+			profileBuilder.PassThrough(ovirtsdk.NewVnicPassThroughBuilder().Mode(params.PassThrough()).MustBuild())
+			profileBuilder.PortMirroring(params.PortMirroring())
 			req := o.conn.SystemService().VnicProfilesService().Add()
 			response, err := req.Profile(profileBuilder.MustBuild()).Send()
 			if err != nil {

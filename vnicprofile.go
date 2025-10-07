@@ -22,7 +22,17 @@ type VNICProfileClient interface {
 }
 
 // OptionalVNICProfileParameters is a set of parameters for creating VNICProfiles that are optional.
-type OptionalVNICProfileParameters interface{}
+type OptionalVNICProfileParameters interface {
+	// Comment sets a comment for the VNIC profile.
+	Comment() string
+
+	// Description sets a description for the VNIC profile.
+	Description() string
+
+	PassThrough() ovirtsdk.VnicPassThroughMode
+
+	PortMirroring() bool
+}
 
 // BuildableVNICProfileParameters is a buildable version of OptionalVNICProfileParameters.
 type BuildableVNICProfileParameters interface {
@@ -34,7 +44,51 @@ func CreateVNICProfileParams() BuildableVNICProfileParameters {
 	return &vnicProfileParams{}
 }
 
-type vnicProfileParams struct{}
+type vnicProfileParams struct {
+	comment       string
+	description   string
+	passThrough   ovirtsdk.VnicPassThroughMode
+	portMirroring bool
+}
+
+// Implement OptionalVNICProfileParameters
+func (v *vnicProfileParams) Comment() string {
+	return v.comment
+}
+
+func (v *vnicProfileParams) Description() string {
+	return v.description
+}
+
+func (v *vnicProfileParams) PassThrough() ovirtsdk.VnicPassThroughMode {
+	return v.passThrough
+}
+
+func (v *vnicProfileParams) PortMirroring() bool {
+	return v.portMirroring
+}
+
+// Optionally add "With" builder methods if BuildableVNICProfileParameters
+// is meant to be a fluent builder:
+func (v *vnicProfileParams) WithComment(c string) *vnicProfileParams {
+	v.comment = c
+	return v
+}
+
+func (v *vnicProfileParams) WithDescription(d string) *vnicProfileParams {
+	v.description = d
+	return v
+}
+
+func (v *vnicProfileParams) WithPassThrough(p ovirtsdk.VnicPassThroughMode) *vnicProfileParams {
+	v.passThrough = p
+	return v
+}
+
+func (v *vnicProfileParams) WithPortMirroring(pm bool) *vnicProfileParams {
+	v.portMirroring = pm
+	return v
+}
 
 // VNICProfileData is the core of VNICProfile, providing only data access functions.
 type VNICProfileData interface {
@@ -44,6 +98,10 @@ type VNICProfileData interface {
 	Name() string
 	// NetworkID returns the network ID the VNICProfile is attached to.
 	NetworkID() NetworkID
+	Comment() string
+	Description() string
+	PassThrough() string
+	PortMirroring() bool
 }
 
 // VNICProfile is a collection of settings that can be applied to individual virtual network interface cards in the
@@ -74,22 +132,53 @@ func convertSDKVNICProfile(sdkObject *ovirtsdk.VnicProfile, client Client) (VNIC
 	if !ok {
 		return nil, newFieldNotFound("Network on VNICProfile", "ID")
 	}
-
+	comment, ok := sdkObject.Comment()
+	if !ok {
+		comment = ""
+	}
+	description, ok := sdkObject.Description()
+	if !ok {
+		description = ""
+	}
+	passThroughObj, ok := sdkObject.PassThrough()
+	var passThrough string
+	if ok && passThroughObj != nil {
+		enabled, ok := passThroughObj.Mode()
+		if ok && enabled == "enabled" {
+			passThrough = "enabled"
+		} else {
+			passThrough = "disabled"
+		}
+	} else {
+		passThrough = "disabled"
+	}
+	portMirroring, ok := sdkObject.PortMirroring()
+	if !ok {
+		portMirroring = false
+	}
 	return &vnicProfile{
 		client: client,
 
-		id:        VNICProfileID(id),
-		name:      name,
-		networkID: NetworkID(networkID),
+		id:            VNICProfileID(id),
+		name:          name,
+		networkID:     NetworkID(networkID),
+		comment:       comment,
+		description:   description,
+		passThrough:   passThrough,
+		portMirroring: portMirroring,
 	}, nil
 }
 
 type vnicProfile struct {
 	client Client
 
-	id        VNICProfileID
-	networkID NetworkID
-	name      string
+	id            VNICProfileID
+	networkID     NetworkID
+	name          string
+	comment       string
+	description   string
+	passThrough   string
+	portMirroring bool
 }
 
 func (v vnicProfile) Remove(retries ...RetryStrategy) error {
@@ -110,4 +199,20 @@ func (v vnicProfile) NetworkID() NetworkID {
 
 func (v vnicProfile) ID() VNICProfileID {
 	return v.id
+}
+
+func (v vnicProfile) Comment() string {
+	return v.comment
+}
+
+func (v vnicProfile) Description() string {
+	return v.description
+}
+
+func (v vnicProfile) PassThrough() string {
+	return v.passThrough
+}
+
+func (v vnicProfile) PortMirroring() bool {
+	return v.portMirroring
 }
