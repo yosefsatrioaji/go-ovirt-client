@@ -29,7 +29,7 @@ type OptionalVNICProfileParameters interface {
 	// Description sets a description for the VNIC profile.
 	Description() string
 
-	PassThrough() ovirtsdk.VnicPassThroughMode
+	PassThrough() string
 
 	PortMirroring() bool
 }
@@ -41,7 +41,7 @@ type BuildableVNICProfileParameters interface {
 	WithComment(c string) *vnicProfileParams
 	// WithDescription sets a description for the VNIC profile.
 	WithDescription(d string) *vnicProfileParams
-	WithPassThrough(p ovirtsdk.VnicPassThroughMode) *vnicProfileParams
+	WithPassThrough(p string) *vnicProfileParams
 	WithPortMirroring(pm bool) *vnicProfileParams
 }
 
@@ -53,7 +53,7 @@ func CreateVNICProfileParams() BuildableVNICProfileParameters {
 type vnicProfileParams struct {
 	comment       string
 	description   string
-	passThrough   ovirtsdk.VnicPassThroughMode
+	passThrough   string
 	portMirroring bool
 }
 
@@ -66,7 +66,7 @@ func (v *vnicProfileParams) Description() string {
 	return v.description
 }
 
-func (v *vnicProfileParams) PassThrough() ovirtsdk.VnicPassThroughMode {
+func (v *vnicProfileParams) PassThrough() string {
 	return v.passThrough
 }
 
@@ -86,7 +86,7 @@ func (v *vnicProfileParams) WithDescription(d string) *vnicProfileParams {
 	return v
 }
 
-func (v *vnicProfileParams) WithPassThrough(p ovirtsdk.VnicPassThroughMode) *vnicProfileParams {
+func (v *vnicProfileParams) WithPassThrough(p string) *vnicProfileParams {
 	v.passThrough = p
 	return v
 }
