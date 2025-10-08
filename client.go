@@ -42,6 +42,7 @@ type Client interface {
 	InstanceTypeClient
 	GraphicsConsoleClient
 	ClusterNetworkClient
+	NetworkAttachmentClient
 }
 
 // ClientWithLegacySupport is an extension of Client that also offers the ability to retrieve the underlying
