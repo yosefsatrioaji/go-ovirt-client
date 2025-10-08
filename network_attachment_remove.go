@@ -17,25 +17,6 @@ func (o *oVirtClient) DetachNetworkFromHost(
 		retries,
 		func() error {
 			hostService := o.conn.SystemService().HostsService().HostService(string(hostID))
-			nicsService := hostService.NicsService()
-			nicsResponse, err := nicsService.List().Send()
-			if err != nil {
-				return err
-			}
-			var nicID string
-			nics, ok := nicsResponse.Nics()
-			if !ok {
-				return fmt.Errorf("no nics returned from host %s", hostID)
-			}
-			for _, nic := range nics.Slice() {
-				if nic.MustName() == nicName {
-					nicID = nic.MustId()
-					break
-				}
-			}
-			if nicID == "" {
-				return fmt.Errorf("nic %s not found on host %s", nicName, hostID)
-			}
 			_, err = hostService.NetworkAttachmentsService().AttachmentService(string(id)).Remove().Send()
 			if err != nil {
 				return err
