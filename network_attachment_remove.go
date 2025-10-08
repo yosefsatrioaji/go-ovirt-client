@@ -25,3 +25,14 @@ func (o *oVirtClient) DetachNetworkFromHost(
 		})
 	return
 }
+
+func (m *mockClient) DetachNetworkFromHost(
+	id NetworkAttachmentID,
+	hostID HostID,
+	nicName string,
+	retries ...RetryStrategy,
+) (err error) {
+	m.lock.Lock()
+	defer m.lock.Unlock()
+	return nil
+}

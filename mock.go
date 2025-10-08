@@ -43,6 +43,7 @@ type mockClient struct {
 	vmIPs                             map[VMID]map[string][]net.IP
 	instanceTypes                     map[InstanceTypeID]*instanceType
 	graphicsConsolesByVM              map[VMID][]*vmGraphicsConsole
+	networkAttachment                 map[NetworkAttachmentID]*networkAttachment
 }
 
 func (m *mockClient) WithContext(ctx context.Context) Client {
@@ -71,6 +72,7 @@ func (m *mockClient) WithContext(ctx context.Context) Client {
 		m.vmIPs,
 		m.instanceTypes,
 		m.graphicsConsolesByVM,
+		m.networkAttachment,
 	}
 }
 

@@ -24,3 +24,9 @@ func (o *oVirtClient) ClusterNetworkGet(clusterID ClusterID, networkID NetworkID
 		})
 	return result, err
 }
+
+func (m *mockClient) ClusterNetworkGet(clusterID ClusterID, networkID NetworkID, _ ...RetryStrategy) (result ClusterNetwork, err error) {
+	m.lock.Lock()
+	defer m.lock.Unlock()
+	return nil, nil
+}

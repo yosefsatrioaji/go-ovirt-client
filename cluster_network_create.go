@@ -35,3 +35,14 @@ func (o *oVirtClient) CreateClusterNetwork(
 		})
 	return result, err
 }
+
+func (m *mockClient) CreateClusterNetwork(
+	clusterID ClusterID,
+	networkID NetworkID,
+	required bool,
+	retries ...RetryStrategy,
+) (result ClusterNetwork, err error) {
+	m.lock.Lock()
+	defer m.lock.Unlock()
+	return nil, nil
+}

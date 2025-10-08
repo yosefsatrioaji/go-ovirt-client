@@ -23,3 +23,13 @@ func (o *oVirtClient) RemoveClusterNetwork(
 		})
 	return
 }
+
+func (m *mockClient) RemoveClusterNetwork(
+	clusterID ClusterID,
+	networkID NetworkID,
+	retries ...RetryStrategy,
+) (err error) {
+	m.lock.Lock()
+	defer m.lock.Unlock()
+	return nil
+}

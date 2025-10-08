@@ -62,3 +62,19 @@ func (o *oVirtClient) AttachNetworkToHost(
 		})
 	return result, err
 }
+
+func (m *mockClient) AttachNetworkToHost(
+	name string,
+	comment string,
+	description string,
+	hostID HostID,
+	networkID NetworkID,
+	nicName string,
+	retries ...RetryStrategy,
+) (result NetworkAttachment, err error) {
+	m.lock.Lock()
+	defer m.lock.Unlock()
+	id := NetworkAttachmentID(m.GenerateUUID())
+	m.networkAttachment[id] = &networkAttachment{}
+	return m.networkAttachment[id], nil
+}

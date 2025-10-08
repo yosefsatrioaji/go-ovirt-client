@@ -30,3 +30,14 @@ func (o *oVirtClient) GetNetworkAttachment(
 		})
 	return result, err
 }
+
+func (m *mockClient) GetNetworkAttachment(
+	id NetworkAttachmentID,
+	hostID HostID,
+	nicName string,
+	retries ...RetryStrategy,
+) (result NetworkAttachment, err error) {
+	m.lock.Lock()
+	defer m.lock.Unlock()
+	return nil, nil
+}

@@ -45,6 +45,19 @@ func (o *oVirtClient) CreateNetwork(
 	return result, err
 }
 
+func (m *mockClient) CreateNetwork(
+	dataCenterId DatacenterID,
+	name string,
+	description string,
+	comment string,
+	vlanID int,
+	retries ...RetryStrategy,
+) (result Network, err error) {
+	m.lock.Lock()
+	defer m.lock.Unlock()
+	return nil, nil
+}
+
 func validateNetworkCreationParameters(name string, dataCenterId DatacenterID) error {
 	if name == "" {
 		return newError(EBadArgument, "name cannot be empty for Network creation")

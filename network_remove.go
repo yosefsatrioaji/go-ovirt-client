@@ -19,3 +19,9 @@ func (o *oVirtClient) RemoveNetwork(id NetworkID, retries ...RetryStrategy) (err
 		})
 	return
 }
+
+func (m *mockClient) RemoveNetwork(id NetworkID, retries ...RetryStrategy) (err error) {
+	m.lock.Lock()
+	defer m.lock.Unlock()
+	return nil
+}

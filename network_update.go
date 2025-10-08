@@ -46,3 +46,17 @@ func (o *oVirtClient) UpdateNetwork(
 		})
 	return result, err
 }
+
+func (m *mockClient) UpdateNetwork(
+	id NetworkID,
+	dataCenterId DatacenterID,
+	name string,
+	description string,
+	comment string,
+	vlanID int,
+	retries ...RetryStrategy,
+) (result Network, err error) {
+	m.lock.Lock()
+	defer m.lock.Unlock()
+	return nil, nil
+}
