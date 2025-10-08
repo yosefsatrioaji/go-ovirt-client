@@ -7,6 +7,7 @@ import (
 )
 
 func (o *oVirtClient) UpdateNetwork(
+	id NetworkID,
 	dataCenterId DatacenterID,
 	name string,
 	description string,
@@ -25,6 +26,7 @@ func (o *oVirtClient) UpdateNetwork(
 		retries,
 		func() error {
 			networkBuilder := ovirtsdk.NewNetworkBuilder()
+			networkBuilder.Id(string(id))
 			networkBuilder.Name(name)
 			networkBuilder.DataCenter(ovirtsdk.NewDataCenterBuilder().Id(string(dataCenterId)).MustBuild())
 			networkBuilder.Description(description)

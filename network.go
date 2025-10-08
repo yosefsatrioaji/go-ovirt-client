@@ -22,7 +22,7 @@ type NetworkClient interface {
 	// RemoveNetwork removes the specified network.
 	RemoveNetwork(id NetworkID, retries ...RetryStrategy) error
 	// UpdateNetwork updates the specified network with the given parameters.
-	UpdateNetwork(dataCenterId DatacenterID, name string, description string, comment string, vlanID int, retries ...RetryStrategy) (Network, error)
+	UpdateNetwork(id NetworkID, dataCenterId DatacenterID, name string, description string, comment string, vlanID int, retries ...RetryStrategy) (Network, error)
 }
 
 // NetworkData is the core of Network, providing only the data access functions, but not the client
