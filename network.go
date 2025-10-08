@@ -17,6 +17,10 @@ type NetworkClient interface {
 	GetNetwork(id NetworkID, retries ...RetryStrategy) (Network, error)
 	// ListNetworks returns all networks on the oVirt engine.
 	ListNetworks(retries ...RetryStrategy) ([]Network, error)
+	// CreateNetwork creates a new network in the specified data center with the given parameters.
+	CreateNetwork(dataCenterId DatacenterID, name string, description string, comment string, vlanID int, retries ...RetryStrategy) (Network, error)
+	// RemoveNetwork removes the specified network.
+	RemoveNetwork(id NetworkID, retries ...RetryStrategy) error
 }
 
 // NetworkData is the core of Network, providing only the data access functions, but not the client
@@ -28,6 +32,12 @@ type NetworkData interface {
 	Name() string
 	// DatacenterID is the identifier of the datacenter object.
 	DatacenterID() DatacenterID
+	// Description returns the description of this network.
+	Description() string
+	// Comment returns the comment of this network.
+	Comment() string
+	// VlanID returns the VLAN ID of this network.
+	VlanID() int
 }
 
 // Network is the interface defining the fields for networks.
@@ -55,11 +65,32 @@ func convertSDKNetwork(sdkObject *ovirtsdk4.Network, client *oVirtClient) (Netwo
 	if !ok {
 		return nil, newFieldNotFound("datacenter on network", "ID")
 	}
+	description, ok := sdkObject.Description()
+	if !ok {
+		description = ""
+	}
+	comment, ok := sdkObject.Comment()
+	if !ok {
+		comment = ""
+	}
+	vlan, ok := sdkObject.Vlan()
+	var vlanID int
+	if ok && vlan != nil {
+		vlanID64, ok := vlan.Id()
+		if ok {
+			vlanID = int(vlanID64)
+		}
+	} else {
+		vlanID = 0
+	}
 	return &network{
-		client: client,
-		id:     NetworkID(id),
-		name:   name,
-		dcID:   DatacenterID(dcID),
+		client:      client,
+		id:          NetworkID(id),
+		name:        name,
+		dcID:        DatacenterID(dcID),
+		description: description,
+		comment:     comment,
+		vlanID:      vlanID,
 	}, nil
 }
 
@@ -69,6 +100,12 @@ type network struct {
 	id   NetworkID
 	name string
 	dcID DatacenterID
+	// description is an optional description of the network.
+	description string
+	// comment is an optional comment for the network.
+	comment string
+	// vlanID is the VLAN ID of the network. 0 means no VLAN.
+	vlanID int
 }
 
 func (n network) ID() NetworkID {
@@ -85,4 +122,16 @@ func (n network) DatacenterID() DatacenterID {
 
 func (n network) Datacenter(retries ...RetryStrategy) (Datacenter, error) {
 	return n.client.GetDatacenter(n.dcID, retries...)
+}
+
+func (n network) Description() string {
+	return n.description
+}
+
+func (n network) Comment() string {
+	return n.comment
+}
+
+func (n network) VlanID() int {
+	return n.vlanID
 }
