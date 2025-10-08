@@ -9,6 +9,8 @@ type ClusterNetworkClient interface {
 	CreateClusterNetwork(clusterID ClusterID, networkID NetworkID, required bool, retries ...RetryStrategy) (ClusterNetwork, error)
 	// RemoveClusterNetwork removes a network from the specified cluster.
 	RemoveClusterNetwork(clusterID ClusterID, networkID NetworkID, retries ...RetryStrategy) error
+	// ClusterNetworkGet retrieves a specific network from the specified cluster.
+	ClusterNetworkGet(clusterID ClusterID, networkID NetworkID, retries ...RetryStrategy) (ClusterNetwork, error)
 }
 
 type ClusterNetworkData interface {

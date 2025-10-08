@@ -10,6 +10,8 @@ type NetworkAttachmentClient interface {
 	AttachNetworkToHost(name string, comment string, description string, hostID HostID, networkID NetworkID, nicName string, retries ...RetryStrategy) (NetworkAttachment, error)
 	// DetachNetworkFromHost detaches a network from a host.
 	DetachNetworkFromHost(id NetworkAttachmentID, hostID HostID, nicName string, retries ...RetryStrategy) error
+	// GetNetworkAttachment retrieves a specific network attachment from a host.
+	GetNetworkAttachment(id NetworkAttachmentID, hostID HostID, nicName string, retries ...RetryStrategy) (NetworkAttachment, error)
 }
 
 type NetworkAttachmentData interface {
