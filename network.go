@@ -50,7 +50,7 @@ type Network interface {
 	Datacenter(retries ...RetryStrategy) (Datacenter, error)
 }
 
-func CreateNetworkParams()
+// func CreateNetworkParams()
 
 func convertSDKNetwork(sdkObject *ovirtsdk4.Network, client *oVirtClient) (Network, error) {
 	id, ok := sdkObject.Id()
