@@ -51,6 +51,22 @@ func (o *oVirtClient) AttachNetworkToHost(
 			if !ok {
 				return newFieldNotFound("response from network attachment creation", "attachment")
 			}
+			id, ok := sdkAttachment.Id()
+			if !ok {
+				return newFieldNotFound("NetworkAttachment", "id")
+			}
+			fresh, getErr := o.conn.SystemService().
+				HostsService().
+				HostService(string(hostID)).
+				NetworkAttachmentsService().
+				AttachmentService(id).
+				Get().
+				Send()
+			if getErr == nil {
+				if full, ok := fresh.Attachment(); ok {
+					sdkAttachment = full
+				}
+			}
 			result, err = convertSDKNetworkAttachment(sdkAttachment, o)
 			return err
 		})
