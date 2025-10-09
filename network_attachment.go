@@ -62,9 +62,6 @@ func convertSDKNetworkAttachment(sdkObject *ovirtsdk.NetworkAttachment, client C
 	} else {
 		nicName = "" // fallback if hostNic missing entirely
 	}
-	if !ok {
-		return nil, newFieldNotFound("NetworkAttachment", "host nic name")
-	}
 	return &networkAttachment{
 		client:    client,
 		id:        NetworkAttachmentID(id),
