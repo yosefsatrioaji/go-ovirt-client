@@ -7,7 +7,7 @@ type NetworkAttachmentID string
 
 type NetworkAttachmentClient interface {
 	// AttachNetworkToHost attaches a network to a host, returning the resulting network attachment.
-	AttachNetworkToHost(name string, comment string, description string, hostID HostID, networkID NetworkID, nicName string, retries ...RetryStrategy) (NetworkAttachment, error)
+	AttachNetworkToHost(comment string, description string, hostID HostID, networkID NetworkID, nicName string, retries ...RetryStrategy) (NetworkAttachment, error)
 	// DetachNetworkFromHost detaches a network from a host.
 	DetachNetworkFromHost(id NetworkAttachmentID, hostID HostID, nicName string, retries ...RetryStrategy) error
 	// GetNetworkAttachment retrieves a specific network attachment from a host.
@@ -15,7 +15,6 @@ type NetworkAttachmentClient interface {
 }
 
 type NetworkAttachmentData interface {
-	Name() string
 	Comment() string
 	Description() string
 	ID() NetworkAttachmentID
@@ -34,10 +33,6 @@ type NetworkAttachment interface {
 
 func convertSDKNetworkAttachment(sdkObject *ovirtsdk.NetworkAttachment, client Client) (NetworkAttachment, error) {
 	id, ok := sdkObject.Id()
-	name, ok := sdkObject.Name()
-	if !ok {
-		return nil, newFieldNotFound("NetworkAttachment", "name")
-	}
 	comment, ok := sdkObject.Comment()
 	if !ok {
 		return nil, newFieldNotFound("NetworkAttachment", "comment")
@@ -75,7 +70,6 @@ func convertSDKNetworkAttachment(sdkObject *ovirtsdk.NetworkAttachment, client C
 	}
 	return &networkAttachment{
 		client:      client,
-		name:        name,
 		comment:     comment,
 		description: description,
 		id:          NetworkAttachmentID(id),
@@ -87,7 +81,6 @@ func convertSDKNetworkAttachment(sdkObject *ovirtsdk.NetworkAttachment, client C
 
 type networkAttachment struct {
 	client      Client
-	name        string
 	comment     string
 	description string
 	id          NetworkAttachmentID
@@ -98,10 +91,6 @@ type networkAttachment struct {
 
 func (n networkAttachment) ID() NetworkAttachmentID {
 	return n.id
-}
-
-func (n networkAttachment) Name() string {
-	return n.name
 }
 
 func (n networkAttachment) Comment() string {

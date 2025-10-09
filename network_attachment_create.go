@@ -7,7 +7,6 @@ import (
 )
 
 func (o *oVirtClient) AttachNetworkToHost(
-	name string,
 	comment string,
 	description string,
 	hostID HostID,
@@ -42,7 +41,6 @@ func (o *oVirtClient) AttachNetworkToHost(
 				return fmt.Errorf("nic %s not found on host %s", nicName, hostID)
 			}
 			networkAttachmentBuilder := ovirtsdk.NewNetworkAttachmentBuilder()
-			networkAttachmentBuilder.Name(name)
 			networkAttachmentBuilder.Comment(comment)
 			networkAttachmentBuilder.Description(description)
 			networkAttachmentBuilder.Host(ovirtsdk.NewHostBuilder().Id(string(hostID)).MustBuild())
@@ -64,7 +62,6 @@ func (o *oVirtClient) AttachNetworkToHost(
 }
 
 func (m *mockClient) AttachNetworkToHost(
-	name string,
 	comment string,
 	description string,
 	hostID HostID,
