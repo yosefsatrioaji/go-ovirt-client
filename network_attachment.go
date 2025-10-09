@@ -7,7 +7,7 @@ type NetworkAttachmentID string
 
 type NetworkAttachmentClient interface {
 	// AttachNetworkToHost attaches a network to a host, returning the resulting network attachment.
-	AttachNetworkToHost(comment string, description string, hostID HostID, networkID NetworkID, nicName string, retries ...RetryStrategy) (NetworkAttachment, error)
+	AttachNetworkToHost(hostID HostID, networkID NetworkID, nicName string, retries ...RetryStrategy) (NetworkAttachment, error)
 	// DetachNetworkFromHost detaches a network from a host.
 	DetachNetworkFromHost(id NetworkAttachmentID, hostID HostID, nicName string, retries ...RetryStrategy) error
 	// GetNetworkAttachment retrieves a specific network attachment from a host.
@@ -15,8 +15,6 @@ type NetworkAttachmentClient interface {
 }
 
 type NetworkAttachmentData interface {
-	Comment() string
-	Description() string
 	ID() NetworkAttachmentID
 	HostID() HostID
 	NetworkID() NetworkID
@@ -33,14 +31,6 @@ type NetworkAttachment interface {
 
 func convertSDKNetworkAttachment(sdkObject *ovirtsdk.NetworkAttachment, client Client) (NetworkAttachment, error) {
 	id, ok := sdkObject.Id()
-	comment, ok := sdkObject.Comment()
-	if !ok {
-		return nil, newFieldNotFound("NetworkAttachment", "comment")
-	}
-	description, ok := sdkObject.Description()
-	if !ok {
-		return nil, newFieldNotFound("NetworkAttachment", "description")
-	}
 	if !ok {
 		return nil, newFieldNotFound("NetworkAttachment", "ID")
 	}
@@ -69,36 +59,24 @@ func convertSDKNetworkAttachment(sdkObject *ovirtsdk.NetworkAttachment, client C
 		return nil, newFieldNotFound("NetworkAttachment", "host nic name")
 	}
 	return &networkAttachment{
-		client:      client,
-		comment:     comment,
-		description: description,
-		id:          NetworkAttachmentID(id),
-		hostID:      HostID(hostID),
-		networkID:   NetworkID(networkID),
-		nicName:     nicName,
+		client:    client,
+		id:        NetworkAttachmentID(id),
+		hostID:    HostID(hostID),
+		networkID: NetworkID(networkID),
+		nicName:   nicName,
 	}, nil
 }
 
 type networkAttachment struct {
-	client      Client
-	comment     string
-	description string
-	id          NetworkAttachmentID
-	hostID      HostID
-	networkID   NetworkID
-	nicName     string
+	client    Client
+	id        NetworkAttachmentID
+	hostID    HostID
+	networkID NetworkID
+	nicName   string
 }
 
 func (n networkAttachment) ID() NetworkAttachmentID {
 	return n.id
-}
-
-func (n networkAttachment) Comment() string {
-	return n.comment
-}
-
-func (n networkAttachment) Description() string {
-	return n.description
 }
 
 func (n networkAttachment) HostID() HostID {
