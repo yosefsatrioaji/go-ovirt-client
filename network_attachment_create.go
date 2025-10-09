@@ -41,7 +41,7 @@ func (o *oVirtClient) AttachNetworkToHost(
 			networkAttachmentBuilder := ovirtsdk.NewNetworkAttachmentBuilder()
 			networkAttachmentBuilder.Host(ovirtsdk.NewHostBuilder().Id(string(hostID)).MustBuild())
 			networkAttachmentBuilder.Network(ovirtsdk.NewNetworkBuilder().Id(string(networkID)).MustBuild())
-			networkAttachmentBuilder.HostNic(ovirtsdk.NewHostNicBuilder().Id(nicID).MustBuild())
+			networkAttachmentBuilder.HostNic(ovirtsdk.NewHostNicBuilder().Id(nicID).Name(nicName).MustBuild())
 			req := hostService.NetworkAttachmentsService().Add()
 			response, err := req.Attachment(networkAttachmentBuilder.MustBuild()).Send()
 			if err != nil {
