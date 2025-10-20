@@ -55,6 +55,11 @@ func (o *oVirtClient) AttachNetworkToHost(
 			if !ok {
 				return newFieldNotFound("NetworkAttachment", "id")
 			}
+			// Commit Net Config
+			_, errorCommitNet := hostService.CommitNetConfig().Async(true).Send()
+			if errorCommitNet != nil {
+				return errorCommitNet
+			}
 			fresh, getErr := o.conn.SystemService().
 				HostsService().
 				HostService(string(hostID)).

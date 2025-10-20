@@ -21,6 +21,11 @@ func (o *oVirtClient) DetachNetworkFromHost(
 			if err != nil {
 				return err
 			}
+			// Commit Net Config
+			_, errorCommitNet := hostService.CommitNetConfig().Async(true).Send()
+			if errorCommitNet != nil {
+				return errorCommitNet
+			}
 			return nil
 		})
 	return
