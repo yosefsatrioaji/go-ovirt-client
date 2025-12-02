@@ -27,6 +27,12 @@ type Cluster interface {
 	ID() ClusterID
 	// Name returns the textual name of the cluster.
 	Name() string
+
+	Comment() string
+
+	Description() string
+
+	DatacenterID() DatacenterID
 }
 
 func convertSDKCluster(sdkCluster *ovirtsdk4.Cluster, client Client) (Cluster, error) {
@@ -39,18 +45,40 @@ func convertSDKCluster(sdkCluster *ovirtsdk4.Cluster, client Client) (Cluster, e
 	if !ok {
 		return nil, newError(EFieldMissing, "failed to fetch name for cluster %s", id)
 	}
+	comment, ok := sdkCluster.Comment()
+	if !ok {
+		return nil, newError(EFieldMissing, "failed to fetch comment for cluster %s", id)
+	}
+	description, ok := sdkCluster.Description()
+	if !ok {
+		return nil, newError(EFieldMissing, "failed to fetch description for cluster %s", id)
+	}
+	datacenter, ok := sdkCluster.DataCenter()
+	if !ok {
+		return nil, newError(EFieldMissing, "failed to fetch datacenter for cluster %s", id)
+	}
+	datacenterID, ok := datacenter.Id()
+	if !ok {
+		return nil, newError(EFieldMissing, "failed to fetch datacenter ID for cluster %s", id)
+	}
 	return &cluster{
-		client: client,
-		id:     ClusterID(id),
-		name:   name,
+		client:       client,
+		id:           ClusterID(id),
+		name:         name,
+		comment:      comment,
+		description:  description,
+		datacenterID: DatacenterID(datacenterID),
 	}, nil
 }
 
 type cluster struct {
 	client Client
 
-	id   ClusterID
-	name string
+	id           ClusterID
+	name         string
+	comment      string
+	description  string
+	datacenterID DatacenterID
 }
 
 func (c cluster) ID() ClusterID {
@@ -59,4 +87,16 @@ func (c cluster) ID() ClusterID {
 
 func (c cluster) Name() string {
 	return c.name
+}
+
+func (c cluster) Comment() string {
+	return c.comment
+}
+
+func (c cluster) Description() string {
+	return c.description
+}
+
+func (c cluster) DatacenterID() DatacenterID {
+	return c.DatacenterID()
 }
