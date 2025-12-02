@@ -25,7 +25,6 @@ type DatacenterClient interface {
 type DatacenterData interface {
 	ID() DatacenterID
 	Name() string
-	Comment() string
 	Description() string
 }
 
@@ -49,10 +48,6 @@ func convertSDKDatacenter(sdkObject *ovirtsdk4.DataCenter, client *oVirtClient) 
 	if !ok {
 		return nil, newFieldNotFound("datacenter", "name")
 	}
-	comment, ok := sdkObject.Comment()
-	if !ok {
-		return nil, newFieldNotFound("datacenter", "comment")
-	}
 	description, ok := sdkObject.Description()
 	if !ok {
 		return nil, newFieldNotFound("datacenter", "description")
@@ -61,7 +56,6 @@ func convertSDKDatacenter(sdkObject *ovirtsdk4.DataCenter, client *oVirtClient) 
 		client:      client,
 		id:          DatacenterID(id),
 		name:        name,
-		comment:     comment,
 		description: description,
 	}, nil
 }
@@ -71,7 +65,6 @@ type datacenter struct {
 
 	id          DatacenterID
 	name        string
-	comment     string
 	description string
 }
 
@@ -98,10 +91,6 @@ func (d datacenter) ID() DatacenterID {
 
 func (d datacenter) Name() string {
 	return d.name
-}
-
-func (d datacenter) Comment() string {
-	return d.comment
 }
 
 func (d datacenter) Description() string {
