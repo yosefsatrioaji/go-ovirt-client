@@ -98,5 +98,5 @@ func (c cluster) Description() string {
 }
 
 func (c cluster) DatacenterID() DatacenterID {
-	return c.DatacenterID()
+	return c.datacenterID
 }
