@@ -25,7 +25,6 @@ type DatacenterClient interface {
 type DatacenterData interface {
 	ID() DatacenterID
 	Name() string
-	Description() string
 }
 
 // Datacenter is a logical entity that defines the set of resources used in a specific environment.
@@ -48,24 +47,18 @@ func convertSDKDatacenter(sdkObject *ovirtsdk4.DataCenter, client *oVirtClient) 
 	if !ok {
 		return nil, newFieldNotFound("datacenter", "name")
 	}
-	description, ok := sdkObject.Description()
-	if !ok {
-		return nil, newFieldNotFound("datacenter", "description")
-	}
 	return &datacenter{
-		client:      client,
-		id:          DatacenterID(id),
-		name:        name,
-		description: description,
+		client: client,
+		id:     DatacenterID(id),
+		name:   name,
 	}, nil
 }
 
 type datacenter struct {
 	client Client
 
-	id          DatacenterID
-	name        string
-	description string
+	id   DatacenterID
+	name string
 }
 
 func (d datacenter) Clusters(retries ...RetryStrategy) ([]Cluster, error) {
@@ -91,8 +84,4 @@ func (d datacenter) ID() DatacenterID {
 
 func (d datacenter) Name() string {
 	return d.name
-}
-
-func (d datacenter) Description() string {
-	return d.description
 }
