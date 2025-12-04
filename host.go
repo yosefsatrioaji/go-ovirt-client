@@ -25,6 +25,7 @@ type HostData interface {
 	Status() HostStatus
 	// Name returns the name of this host.
 	Name() string
+	Comment() string
 }
 
 // Host is the representation of a host returned from the oVirt Engine API. Hosts, also known as hypervisors, are the
@@ -136,12 +137,17 @@ func convertSDKHost(sdkHost *ovirtsdk4.Host, client Client) (Host, error) {
 	if !ok {
 		return nil, newError(EFieldMissing, "returned host did not contain a name")
 	}
+	comment, ok := sdkHost.Comment()
+	if !ok {
+		return nil, newError(EFieldMissing, "returned host did not contain a comment")
+	}
 	return &host{
 		client:    client,
 		id:        HostID(id),
 		status:    HostStatus(status),
 		clusterID: ClusterID(clusterID),
 		name:      name,
+		comment:   comment,
 	}, nil
 }
 
@@ -152,6 +158,7 @@ type host struct {
 	clusterID ClusterID
 	status    HostStatus
 	name      string
+	comment   string
 }
 
 func (h host) ID() HostID {
@@ -168,4 +175,8 @@ func (h host) Status() HostStatus {
 
 func (h host) Name() string {
 	return h.name
+}
+
+func (h host) Comment() string {
+	return h.comment
 }
