@@ -11,6 +11,8 @@ type ClusterNetworkClient interface {
 	RemoveClusterNetwork(clusterID ClusterID, networkID NetworkID, retries ...RetryStrategy) error
 	// ClusterNetworkGet retrieves a specific network from the specified cluster.
 	ClusterNetworkGet(clusterID ClusterID, networkID NetworkID, retries ...RetryStrategy) (ClusterNetwork, error)
+	// ClusterNetworkList lists all networks from the specified cluster.
+	ClusterNetworkList(clusterID ClusterID, retries ...RetryStrategy) ([]ClusterNetwork, error)
 }
 
 type ClusterNetworkData interface {

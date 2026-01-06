@@ -4,7 +4,7 @@ import (
 	"fmt"
 )
 
-func (o *oVirtClient) ListNetworkAttachments(
+func (o *oVirtClient) NetworkAttachmentList(
 	hostID HostID,
 	retries ...RetryStrategy,
 ) (result []NetworkAttachment, err error) {
@@ -35,10 +35,10 @@ func (o *oVirtClient) ListNetworkAttachments(
 	return result, err
 }
 
-func (m *mockClient) ListNetworkAttachment(
+func (m *mockClient) NetworkAttachmentList(
 	hostID HostID,
 	retries ...RetryStrategy,
-) (result NetworkAttachment, err error) {
+) (result []NetworkAttachment, err error) {
 	m.lock.Lock()
 	defer m.lock.Unlock()
 	return nil, nil

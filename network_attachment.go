@@ -12,6 +12,8 @@ type NetworkAttachmentClient interface {
 	DetachNetworkFromHost(id NetworkAttachmentID, hostID HostID, hostNicID HostNICID, retries ...RetryStrategy) error
 	// GetNetworkAttachment retrieves a specific network attachment from a host.
 	GetNetworkAttachment(id NetworkAttachmentID, hostID HostID, hostNicID HostNICID, retries ...RetryStrategy) (NetworkAttachment, error)
+	// NetworkAttachmentList lists all network attachments from a host.
+	NetworkAttachmentList(hostID HostID, retries ...RetryStrategy) ([]NetworkAttachment, error)
 }
 
 type NetworkAttachmentData interface {
