@@ -7,12 +7,12 @@ import (
 func (o *oVirtClient) GetNetworkAttachment(
 	id NetworkAttachmentID,
 	hostID HostID,
-	nicName string,
+	hostNicID HostNICID,
 	retries ...RetryStrategy,
 ) (result NetworkAttachment, err error) {
 	retries = defaultRetries(retries, defaultReadTimeouts(o))
 	err = retry(
-		fmt.Sprintf("getting network attachment %s from host %s on nic %s", id, hostID, nicName),
+		fmt.Sprintf("getting network attachment %s from host %s on nic %s", id, hostID, hostNicID),
 		o.logger,
 		retries,
 		func() error {
@@ -34,7 +34,7 @@ func (o *oVirtClient) GetNetworkAttachment(
 func (m *mockClient) GetNetworkAttachment(
 	id NetworkAttachmentID,
 	hostID HostID,
-	nicName string,
+	hostNicID HostNICID,
 	retries ...RetryStrategy,
 ) (result NetworkAttachment, err error) {
 	m.lock.Lock()

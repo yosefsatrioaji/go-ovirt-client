@@ -7,18 +7,18 @@ type NetworkAttachmentID string
 
 type NetworkAttachmentClient interface {
 	// AttachNetworkToHost attaches a network to a host, returning the resulting network attachment.
-	AttachNetworkToHost(hostID HostID, networkID NetworkID, nicName string, retries ...RetryStrategy) (NetworkAttachment, error)
+	AttachNetworkToHost(hostID HostID, networkID NetworkID, hostNicID HostNICID, retries ...RetryStrategy) (NetworkAttachment, error)
 	// DetachNetworkFromHost detaches a network from a host.
-	DetachNetworkFromHost(id NetworkAttachmentID, hostID HostID, nicName string, retries ...RetryStrategy) error
+	DetachNetworkFromHost(id NetworkAttachmentID, hostID HostID, hostNicID HostNICID, retries ...RetryStrategy) error
 	// GetNetworkAttachment retrieves a specific network attachment from a host.
-	GetNetworkAttachment(id NetworkAttachmentID, hostID HostID, nicName string, retries ...RetryStrategy) (NetworkAttachment, error)
+	GetNetworkAttachment(id NetworkAttachmentID, hostID HostID, hostNicID HostNICID, retries ...RetryStrategy) (NetworkAttachment, error)
 }
 
 type NetworkAttachmentData interface {
 	ID() NetworkAttachmentID
 	HostID() HostID
 	NetworkID() NetworkID
-	NicName() string
+	HostNICID() HostNICID
 }
 
 type NetworkAttachment interface {
@@ -50,24 +50,20 @@ func convertSDKNetworkAttachment(sdkObject *ovirtsdk.NetworkAttachment, client C
 	if !ok {
 		return nil, newFieldNotFound("Network on NetworkAttachment", "ID")
 	}
-	var nicName string
-	if hostNic, ok := sdkObject.HostNic(); ok {
-		if name, ok := hostNic.Name(); ok {
-			nicName = name
-		} else if id, ok := hostNic.Id(); ok {
-			nicName = id
-		} else {
-			nicName = "" // fallback if missing both
-		}
-	} else {
-		nicName = "" // fallback if hostNic missing entirely
+	hostNic, ok := sdkObject.HostNic()
+	if !ok {
+		return nil, newFieldNotFound("HostNic on NetworkAttachment", "hostNic")
+	}
+	hostNicId, ok := hostNic.Id()
+	if !ok {
+		return nil, newFieldNotFound("HostNic on NetworkAttachment", "ID")
 	}
 	return &networkAttachment{
 		client:    client,
 		id:        NetworkAttachmentID(id),
 		hostID:    HostID(hostID),
 		networkID: NetworkID(networkID),
-		nicName:   nicName,
+		hostNicID: HostNICID(hostNicId),
 	}, nil
 }
 
@@ -76,7 +72,7 @@ type networkAttachment struct {
 	id        NetworkAttachmentID
 	hostID    HostID
 	networkID NetworkID
-	nicName   string
+	hostNicID HostNICID
 }
 
 func (n networkAttachment) ID() NetworkAttachmentID {
@@ -91,8 +87,8 @@ func (n networkAttachment) NetworkID() NetworkID {
 	return n.networkID
 }
 
-func (n networkAttachment) NicName() string {
-	return n.nicName
+func (n networkAttachment) HostNICID() HostNICID {
+	return n.hostNicID
 }
 
 func (n networkAttachment) Host(retries ...RetryStrategy) (Host, error) {

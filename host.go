@@ -26,6 +26,7 @@ type HostData interface {
 	// Name returns the name of this host.
 	Name() string
 	Comment() string
+	HostNICs() ([]HostNIC, error)
 }
 
 // Host is the representation of a host returned from the oVirt Engine API. Hosts, also known as hypervisors, are the
@@ -141,6 +142,18 @@ func convertSDKHost(sdkHost *ovirtsdk4.Host, client Client) (Host, error) {
 	if !ok {
 		return nil, newError(EFieldMissing, "returned host did not contain a comment")
 	}
+	nics, ok := sdkHost.Nics()
+	if !ok {
+		return nil, newError(EFieldMissing, "failed to fetch NICs from host %s", id)
+	}
+	hostNICs := make([]HostNIC, len(nics.Slice()))
+	for i, nic := range nics.Slice() {
+		nicObj, e := convertSDKHostNIC(nic, client)
+		if e != nil {
+			return nil, e
+		}
+		hostNICs[i] = nicObj
+	}
 	return &host{
 		client:    client,
 		id:        HostID(id),
@@ -148,6 +161,7 @@ func convertSDKHost(sdkHost *ovirtsdk4.Host, client Client) (Host, error) {
 		clusterID: ClusterID(clusterID),
 		name:      name,
 		comment:   comment,
+		hostNICs:  hostNICs,
 	}, nil
 }
 
@@ -159,6 +173,7 @@ type host struct {
 	status    HostStatus
 	name      string
 	comment   string
+	hostNICs  []HostNIC
 }
 
 func (h host) ID() HostID {
@@ -179,4 +194,8 @@ func (h host) Name() string {
 
 func (h host) Comment() string {
 	return h.comment
+}
+
+func (h host) HostNICs() ([]HostNIC, error) {
+	return h.hostNICs, nil
 }

@@ -9,39 +9,40 @@ import (
 func (o *oVirtClient) AttachNetworkToHost(
 	hostID HostID,
 	networkID NetworkID,
-	nicName string,
+	// nicName string,
+	hostNicID HostNICID,
 	retries ...RetryStrategy,
 ) (result NetworkAttachment, err error) {
 	retries = defaultRetries(retries, defaultWriteTimeouts(o))
 	err = retry(
-		fmt.Sprintf("attaching network %s to host %s on nic %s", networkID, hostID, nicName),
+		fmt.Sprintf("attaching network %s to host %s on nic %s", networkID, hostID, hostNicID),
 		o.logger,
 		retries,
 		func() error {
 			hostService := o.conn.SystemService().HostsService().HostService(string(hostID))
-			nicsService := hostService.NicsService()
-			nicsResponse, err := nicsService.List().Send()
-			if err != nil {
-				return err
-			}
-			var nicID string
-			nics, ok := nicsResponse.Nics()
-			if !ok {
-				return fmt.Errorf("no nics returned from host %s", hostID)
-			}
-			for _, nic := range nics.Slice() {
-				if nic.MustName() == nicName {
-					nicID = nic.MustId()
-					break
-				}
-			}
-			if nicID == "" {
-				return fmt.Errorf("nic %s not found on host %s", nicName, hostID)
-			}
+			// nicsService := hostService.NicsService()
+			// nicsResponse, err := nicsService.List().Send()
+			// if err != nil {
+			// 	return err
+			// }
+			// var nicID string
+			// nics, ok := nicsResponse.Nics()
+			// if !ok {
+			// 	return fmt.Errorf("no nics returned from host %s", hostID)
+			// }
+			// for _, nic := range nics.Slice() {
+			// 	if nic.MustName() == nicName {
+			// 		nicID = nic.MustId()
+			// 		break
+			// 	}
+			// }
+			// if nicID == "" {
+			// 	return fmt.Errorf("nic %s not found on host %s", nicName, hostID)
+			// }
 			networkAttachmentBuilder := ovirtsdk.NewNetworkAttachmentBuilder()
 			networkAttachmentBuilder.Host(ovirtsdk.NewHostBuilder().Id(string(hostID)).MustBuild())
 			networkAttachmentBuilder.Network(ovirtsdk.NewNetworkBuilder().Id(string(networkID)).MustBuild())
-			networkAttachmentBuilder.HostNic(ovirtsdk.NewHostNicBuilder().Id(nicID).Name(nicName).MustBuild())
+			networkAttachmentBuilder.HostNic(ovirtsdk.NewHostNicBuilder().Id(string(hostNicID)).MustBuild())
 			req := hostService.NetworkAttachmentsService().Add()
 			response, err := req.Attachment(networkAttachmentBuilder.MustBuild()).Send()
 			if err != nil {
@@ -51,7 +52,6 @@ func (o *oVirtClient) AttachNetworkToHost(
 			if !ok {
 				return newFieldNotFound("response from network attachment creation", "attachment")
 			}
-			id, ok := sdkAttachment.Id()
 			if !ok {
 				return newFieldNotFound("NetworkAttachment", "id")
 			}
@@ -59,18 +59,6 @@ func (o *oVirtClient) AttachNetworkToHost(
 			_, errorCommitNet := hostService.CommitNetConfig().Async(true).Send()
 			if errorCommitNet != nil {
 				return errorCommitNet
-			}
-			fresh, getErr := o.conn.SystemService().
-				HostsService().
-				HostService(string(hostID)).
-				NetworkAttachmentsService().
-				AttachmentService(id).
-				Get().
-				Send()
-			if getErr == nil {
-				if full, ok := fresh.Attachment(); ok {
-					sdkAttachment = full
-				}
 			}
 			result, err = convertSDKNetworkAttachment(sdkAttachment, o)
 			return err
@@ -81,7 +69,7 @@ func (o *oVirtClient) AttachNetworkToHost(
 func (m *mockClient) AttachNetworkToHost(
 	hostID HostID,
 	networkID NetworkID,
-	nicName string,
+	hostNicID HostNICID,
 	retries ...RetryStrategy,
 ) (result NetworkAttachment, err error) {
 	m.lock.Lock()
