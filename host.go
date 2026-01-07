@@ -161,7 +161,6 @@ func convertSDKHost(sdkHost *ovirtsdk4.Host, client Client) (Host, error) {
 		clusterID: ClusterID(clusterID),
 		name:      name,
 		comment:   comment,
-		hostNICs:  hostNICs,
 	}, nil
 }
 
@@ -173,7 +172,6 @@ type host struct {
 	status    HostStatus
 	name      string
 	comment   string
-	hostNICs  []HostNIC
 }
 
 func (h host) ID() HostID {
@@ -197,5 +195,5 @@ func (h host) Comment() string {
 }
 
 func (h host) HostNICs() ([]HostNIC, error) {
-	return h.hostNICs, nil
+	return h.client.ListHostNICs(h.id)
 }

@@ -6,6 +6,10 @@ import (
 
 type HostNICID string
 
+type HostNICClient interface {
+	ListHostNICs(hostID HostID, retries ...RetryStrategy) ([]HostNIC, error)
+}
+
 type HostNICData interface {
 	ID() HostNICID
 	Name() string
